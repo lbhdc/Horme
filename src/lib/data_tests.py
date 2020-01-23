@@ -39,7 +39,7 @@ class BalanceTests(unittest.TestCase):
         err = results.count(False)
         self.assertEqual(
             0, err,
-            "balance did not underbalance with the default settings"
+            "balance did not underbalance the sample data"
         )
 
     def test_oversample(self):
@@ -68,5 +68,5 @@ class BalanceTests(unittest.TestCase):
         err = results.count(False)
         self.assertEqual(
             0, err,
-            "balance did not overbalance with the default settings"
+            "balance did not overbalance the sample data"
         )
