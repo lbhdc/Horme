@@ -7,14 +7,17 @@ import unittest
 
 class BalanceTests(unittest.TestCase):
 
+    # random target names are generated to ensure magic strings aren't being
+    # relied on
+    def random_target_name(self, n=5):
+        return "".join([random.choice(string.ascii_letters) for _ in range(n)])
+
     def sample_data(self, n):
         data = [random.choice(string.ascii_letters) for _ in range(n)]
         return pd.DataFrame({"target": data}, dtype="category")
 
     def test_undersample(self):
-        # a random column name is generated to make sure a schema is being
-        # relied unknowingly.
-        col = "".join([random.choice(string.ascii_letters) for _ in range(5)])
+        col = self.random_target_name()
 
         data = self.sample_data(1_000)
         data = data.rename(columns={"target": col})
@@ -40,9 +43,7 @@ class BalanceTests(unittest.TestCase):
         )
 
     def test_oversample(self):
-        # a random column name is generated to make sure a schema is being
-        # relied unknowingly.
-        col = "".join([random.choice(string.ascii_letters) for _ in range(5)])
+        col = self.random_target_name()
 
         data = self.sample_data(1_000)
         data = data.rename(columns={"target": col})
