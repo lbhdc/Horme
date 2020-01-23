@@ -12,19 +12,25 @@ class BalanceTests(unittest.TestCase):
         return pd.DataFrame({"target": data}, dtype="category")
 
     def test_undersample(self):
-        data = self.sample_data(100_000)
-        max_count = data.target.value_counts().max()
-        min_count = data.target.value_counts().min()
+        # a random column name is generated to make sure a schema is being
+        # relied unknowingly.
+        col = "".join([random.choice(string.ascii_letters) for _ in range(5)])
+
+        data = self.sample_data(1_000)
+        data = data.rename(columns={"target": col})
+
+        max_count = data[col].value_counts().max()
+        min_count = data[col].value_counts().min()
 
         self.assertNotEqual(
             max_count, min_count,
             "sample data is already balanced"
         )
 
-        balanced_data = data.pipe(lib.data.balance())
+        balanced_data = data.pipe(lib.data.balance(group=col))
         results = []
 
-        for result in balanced_data.target.value_counts():
+        for result in balanced_data[col].value_counts():
             results.append(min_count == result)
 
         err = results.count(False)
@@ -34,19 +40,28 @@ class BalanceTests(unittest.TestCase):
         )
 
     def test_oversample(self):
-        data = self.sample_data(100_000)
-        max_count = data.target.value_counts().max()
-        min_count = data.target.value_counts().min()
+        # a random column name is generated to make sure a schema is being
+        # relied unknowingly.
+        col = "".join([random.choice(string.ascii_letters) for _ in range(5)])
+
+        data = self.sample_data(1_000)
+        data = data.rename(columns={"target": col})
+
+        max_count = data[col].value_counts().max()
+        min_count = data[col].value_counts().min()
 
         self.assertNotEqual(
             max_count, min_count,
             "sample data is already balanced"
         )
 
-        balanced_data = data.pipe(lib.data.balance(strategy="oversample"))
+        balanced_data = data.pipe(
+            lib.data.balance(group=col, strategy="oversample")
+        )
+
         results = []
 
-        for result in balanced_data.target.value_counts():
+        for result in balanced_data[col].value_counts():
             results.append(max_count == result)
 
         err = results.count(False)

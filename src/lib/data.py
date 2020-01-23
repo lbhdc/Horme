@@ -9,17 +9,17 @@ def balance(group="target", strategy="undersample", seed=0):
 
         # oversample
         if "oversample" in strategy:
-            count = df["target"].value_counts().max()
+            count = df[group].value_counts().max()
             replace = True
 
         # undersample
         else:
-            count = df["target"].value_counts().min()
+            count = df[group].value_counts().min()
             replace = False
 
-        for action in df["target"].unique():
+        for action in df[group].unique():
             sample = (
-                df[df["target"] == action]
+                df[df[group] == action]
                     .sample(n=count, replace=replace, random_state=seed)
             )
 
