@@ -1,0 +1,11 @@
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+    21     88.0 MiB     88.0 MiB   @profile(stream=open(LOG_FILE,"w+"))
+    22                             def run(data):
+    23    953.4 MiB    865.5 MiB       model = load_model()
+    24    953.4 MiB      0.0 MiB       decoder = load_decoder()
+    25    953.4 MiB      0.0 MiB       predictions = model.predict(data)
+    26    953.4 MiB      0.0 MiB       return [decoder[i] for i in predictions]
+
+
