@@ -1,4 +1,5 @@
-from pandas import concat, DataFrame
+import os
+from pandas import Categorical, concat, DataFrame, read_csv
 
 
 def balance(group="target", strategy="undersample", seed=0):
@@ -28,3 +29,26 @@ def balance(group="target", strategy="undersample", seed=0):
         return target
 
     return F
+
+
+def read(path):
+    return (
+        read_csv(path)
+        .rename(columns=str.lower)
+        .rename(columns={"gt": "target"})
+        .set_index("arrival_time")
+        .drop(columns=["creation_time", "device", "index", "model"])
+        .assign(
+            target=lambda df: Categorical(df["target"]),
+            user=lambda df: Categorical(df["user"])
+        )
+    )
+
+
+def read_local_phones():
+    data_directory = (
+        os.environ["DATASET"] + "/heterogeneity_activity_recognition"
+    )
+
+    data_path = f"{data_directory}/processed/phones.zip"
+    return read_csv(data_path)
